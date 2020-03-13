@@ -12,12 +12,26 @@ var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" 
 
 var app = express();
 
+var compression = require('compression');
+app.use(compression()); //Compress all routes
+
+var helmet = require('helmet');
+app.use(helmet());
+
+
 
 
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb+srv://library:bettina@cluster0-69ud3.mongodb.net/local_library?retryWrites=true&w=majority';
+//var mongoDB = 'mongodb+srv://library:bettina@cluster0-69ud3.mongodb.net/local_library?retryWrites=true&w=majority';
+
+
+// Set up mongoose connection
+var dev_db_url = 'mongodb+srv://library:bettina@cluster0-69ud3.mongodb.net/local_library?retryWrites=true&w=majority'
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
+
+
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
